@@ -1,33 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { createContext, useState, useEffect } from 'react'
 import './App.css'
+import { AnimatePresence } from 'framer-motion'
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import Login from './routes/Login';
+import Register from './routes/Register';
+import Transact from './routes/Transact';
+import Navbar from './Components/Navbar';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useStore } from './Store/AlphaStore';
+import NotFound from './routes/NotFound';
+import Home from './routes/Home';
+
+export const UserContext: any = createContext({} as any);
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const location = useLocation();
+
+  const {isLogin, auth} = useStore();
+
+  // useEffect(() => {
+  //   sessionStorage.setItem('stellarAuth', auth.toString());
+  // }, [auth]);
+  
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {/* <BrowserRouter> */}
+      {/* <UserContext.Provider value={{animationName, setAnimationName, family, setfamily, familyNo, setfamilyNo}}> */}
+        <Navbar />
+        <AnimatePresence mode='wait'>
+          <Routes key={location.pathname} location={location}>
+            {!isLogin && <Route path="/" element={<Login />} />}
+            {!isLogin && <Route path="/register" element={<Register />} />}
+            {isLogin ? <Route path="/transact" element={<Transact />} /> : <Route path="/" element={<Login />} />}
+            {isLogin ? <Route path="/" element={<Home />} /> : <Route path="/" element={<Login />} />}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AnimatePresence>
+        <ToastContainer />
+      {/* </UserContext.Provider> */}
+      {/* </BrowserRouter> */}
     </>
   )
 }
