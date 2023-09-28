@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Balance from '../Components/Balance'
 
 function Home() {
   return (
@@ -13,15 +14,16 @@ function Home() {
         </div>
         <div className="container relative mx-auto">
           <div className="items-center flex flex-wrap">
-            <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
+            <div className="w-screen px-4 ml-auto mr-auto text-center">
+              
+              <Balance />
+
               <div className="pr-12">
                 <h1 className="text-white mt-[180px] font-semibold text-5xl">
                   Welcome to Petrong Software.
                 </h1>
-                <p className="mt-4 text-lg text-blueGray-200">
-                  This is a simple example of a Landing Page you can build using
-                  Notus JS. It features multiple CSS components based on the
-                  Tailwind CSS design system.
+                <p className="mt-4 text-lg text-blueGray-200 text-white">
+                  This is a cross border payment platform under developement
                 </p>
               </div>
             </div>

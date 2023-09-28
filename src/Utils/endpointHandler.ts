@@ -27,18 +27,19 @@ const instance = axios.create({
     baseURL: 'http://localhost:5000/api/v1/',
     timeout: 15000,
     headers: {'X-Custom-Header': 'foobar',
-              'Authorization': 'Bearer '+sessionStorage.getItem('stellarAuth')
+              'Authorization': 'Bearer '+sessionStorage.getItem('stellarAuth'),
+              'Access-Control-Allow-Origin': '*'
             }
   });
 
-export const callController =async (id='', controller="auth/login", method="get", data={}, validator:any=[], funct:Function, success="successful", error="Something went wrong")=>{
+export const callController =async (id='', controller="auth/login", method="get", data={}, validator:any=[], funct:Function, success="successful", error="Something went wrong", silent="")=>{
     if(validator && !validateInput(validator)){
         callModal('Failed due to invalid input(s)', 0, id)
          return funct('')
     } 
     setTimeout(() => {
         console.log('data', data)
-        callModal('Inputs validated. Form submiting...', 1, id, true)
+        !silent && callModal('Authorized. submiting...', 1, id, true)
         instance({
             method: method,
             url: instance.defaults.baseURL + controller,
@@ -46,14 +47,14 @@ export const callController =async (id='', controller="auth/login", method="get"
         })
         .then(function (response:any) {
             // Handle success
-            callModal(success, 1, id);
+            !silent && callModal(success, 1, id);
             console.log('response', response);
             return funct(response.data)
         })
         .catch(function (err:any) {
             // Handle failure
             console.error(err);
-            callModal(error, 0, id);
+            !silent && callModal(error, 0, id);
             return funct()
             });
     }, 1000); 

@@ -12,17 +12,9 @@ function Login() {
     const [checkInput, setCheckInput] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    
     useEffect(() => {
-      if(sessionStorage.getItem('stellarAuth')){
-        let dauth = sessionStorage.getItem('stellarAuth')
-        setAuth(dauth?.toString() ?? '');
-        setIsLogin(true)
-      }else{
-        setIsLogin(false)
-      }
-      sessionStorage.setItem('stellarAuth', auth.toString());
-    }, [auth]);
-    useEffect(() => {
+      sessionStorage.removeItem('stellarAuth')
       setIsLogin(false)
       return () => {
         setAuth('')

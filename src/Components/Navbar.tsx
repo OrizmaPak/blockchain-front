@@ -9,12 +9,12 @@ function Navbar() {
     <div className='fixed w-[100vw] z-50'><nav className="mx-auto block w-full max-w-screen-xl rounded-xl border border-white/80 bg-white bg-opacity-80 py-2 px-4 text-white shadow-md backdrop-blur-2xl backdrop-saturate-200 lg:px-8 lg:py-4">
     <div>
       <div className="container mx-auto flex items-center justify-between text-gray-900">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="mr-4 block cursor-pointer py-1.5 font-sans text-sm font-normal leading-normal text-inherit antialiased"
           >
           <span>Petrong Softwares</span>
-        </a>
+        </Link>
         <ul className="hidden items-center gap-6 lg:flex">
             {isLogin && <NavItem />}
         </ul>

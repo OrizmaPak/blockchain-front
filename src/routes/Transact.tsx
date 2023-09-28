@@ -4,6 +4,7 @@ import AnimatedPage from "../Components/AnimatedPage";
 import { useStore } from "../Store/AlphaStore";
 import { toast } from "react-toastify";
 import { callController } from "../Utils/endpointHandler";
+import Balance from "../Components/Balance";
 
 function Transact() {
   const [recipintAddress, setRecipintAddress] = useState('')
@@ -78,6 +79,7 @@ function Transact() {
                         type="number"
                         placeholder=""
                         name="fee"
+                        readOnly
                         value={fee}
                         onChange={(e)=>setFee(parseFloat(e.target.value))}
                       />
@@ -111,6 +113,7 @@ function Transact() {
           </div>
         </div>
       </div>
+        <Balance />
     </AnimatedPage>
   );
 }

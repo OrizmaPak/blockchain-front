@@ -34,7 +34,7 @@ export const useStore = create<GenerateUseStore>()((set)=>({
     setAuth: (auth: string) => set({ auth }),
     familyNo: '',
     setfamilyNo: (familyNo: string) => set({ familyNo }),
-    mobileNav: false,
+    mobileNav: false, 
     setmobileNav: (mobileNav: boolean) => set({ mobileNav }),
     isLogin: false,
     setIsLogin: (isLogin: boolean) => set({ isLogin })

@@ -1,17 +1,18 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function NavItem() {
   return (
     <>
         <li className="block p-1 font-sans text-sm font-normal leading-normal text-inherit antialiased">
-            <a className="flex items-center" href="#">
+            <Link to="/history" className="flex items-center" >
               Account History
-            </a>
+            </Link>
           </li>
           <li className="block p-1 font-sans text-sm font-normal leading-normal text-inherit antialiased">
-            <a className="flex items-center" href="#">
+            <Link to="/" className="flex items-center">
               Stream Transactions
-            </a>
+            </Link>
           </li>
           {/* <li className="block p-1 font-sans text-sm font-normal leading-normal text-inherit antialiased">
             <a className="flex items-center" href="#">

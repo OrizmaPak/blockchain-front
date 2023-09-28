@@ -1,15 +1,62 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AnimatedPage from '../Components/AnimatedPage'
+import { useStore } from '../Store/AlphaStore'
+import { callModal } from '../Utils/toast';
+import { toast } from "react-toastify";
+import { callController } from '../Utils/endpointHandler';
+import { useNavigate  } from 'react-router-dom';
 
 function Register() {
+  const history = useNavigate ();
+    const { auth, setAuth, isLogin, setIsLogin } = useStore();
     const [checkInput, setCheckInput] = useState(false)
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
-
+    const [password, setPassword] = useState<string>('')
+    const [confirmPassword, setConfirmPassword] = useState<string>('')
+    const [firstName, setFirstName] = useState<string>('')
+    const [lastName, setLastName] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
+    const [bars, setBars] = useState<number>(0)
+    const calculatePasswordStrength = (password:string):void => {
+      // Initialize a score for the password
+      let score = 0;
+    
+      // Add points for password length
+      if (password.length >= 8) {
+        score += 2;
+      } else if (password.length > 3) {
+        score += 1;
+      }
+    
+      // Add points for containing both uppercase and lowercase letters
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+        score += 3;
+      }
+    
+      // Add points for containing numbers
+      if (/\d/.test(password)) {
+        score += 3;
+      }
+    
+      // Add points for containing special characters
+      if (/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password)) {
+        score += 3;
+      }
+    
+      // Categorize the password strength
+      console.log('score', score, password)
+      setBars(score)
+    };
+  
+  
+    useEffect(() => {
+      sessionStorage.removeItem('stellarAuth')
+      setIsLogin(false)
+      return () => {
+        setAuth('')
+      }
+    }, [])
+    
     
   return (
     <AnimatedPage name="signin-1">
@@ -34,8 +81,13 @@ function Register() {
             <input
               type="text"
               className="peer block min-h-[auto] w-full rounded placeholder:color-[black] border-[#52525290] border-[0.5px] bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-              id="exampleFormControlInput3"
-              placeholder="First Name" />
+              id="firstname"
+              placeholder="First Name" 
+              name="First Name" 
+              value={firstName}
+                      onChange={(e)=>{
+                        setFirstName(e.target.value)
+                      }}/>
             <label 
               className="text-[#272727a3] bg-white px-1 pointer-events-none absolute left-3 top-[2px] mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
               >First Name
@@ -46,8 +98,11 @@ function Register() {
             <input
               type="text"
               className="peer block min-h-[auto] w-full rounded placeholder:color-[black] border-[#52525290] border-[0.5px] bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-              id="exampleFormControlInput3"
-              placeholder="Last Name" />
+              id="lastname"
+              placeholder="Last Name" 
+              name="Last Name" 
+              value={lastName}
+              onChange={(e)=>setLastName(e.target.value)}/>
             <label 
               className="text-[#272727a3] pointer-events-none absolute left-3 top-[2px] bg-white mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
               >Last Name
@@ -58,8 +113,11 @@ function Register() {
             <input
               type="text"
               className="peer block min-h-[auto] w-full rounded placeholder:color-[black] border-[#52525290] border-[0.5px] bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-              id="exampleFormControlInput3"
-              placeholder="Email address" />
+              id="email"
+              placeholder="Email address"
+              name="Email address"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)} />
             <label 
               className="text-[#272727a3] pointer-events-none absolute left-3 top-[2px] bg-white mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
               >Email address
@@ -72,12 +130,26 @@ function Register() {
             <input
               type="password"
               className="peer block min-h-[auto] w-full  border-[#52525290] border-[0.5px] rounded  bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-              id="exampleFormControlInput33"
-              placeholder="Password" />
+              id="password"
+              placeholder="Password"
+              name="password"
+              value={password}
+              onChange={(e)=>{
+                setPassword(e.target.value);
+                calculatePasswordStrength(e.target.value);
+              }}
+              
+            />
             <label
               className="text-[#272727a3] pointer-events-none absolute left-3 top-[2px] bg-white mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
               >Password
             </label>
+            <div className="flex items-center my-3">
+              <div className={`flex-1 ${bars <1 ? 'bg-[#888888]' : 'bg-[#ff1d1d64]'} bg-active-success rounded h-[5px] me-2`}></div>
+              <div className={`flex-1 ${bars < 4 ? 'bg-[#888888]' : 'bg-[#7aff816f]'} bg-active-success rounded h-[5px] me-2`}></div>
+              <div className={`flex-1 ${bars < 8 ? 'bg-[#888888]' : 'bg-[#00ff048c]'} bg-active-success rounded h-[5px] me-2`}></div>
+              <div className={`flex-1 ${bars < 10 ? 'bg-[#888888]' : 'bg-[#13ff23e4]'} bg-active-success rounded h-[5px]`}></div>
+            </div>
           </div>
           
           <div className="relative mb-6" data-te-input-wrapper-init>
@@ -85,7 +157,10 @@ function Register() {
               type="password"
               className="peer block min-h-[auto] w-full  border-[#52525290] border-[0.5px] rounded  bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
               id="exampleFormControlInput33"
-              placeholder="Password" />
+              placeholder="Password" 
+              name="Password" 
+              value={confirmPassword}
+              onChange={(e)=>setConfirmPassword(e.target.value)}/>
             <label
               className="text-[#272727a3] pointer-events-none absolute left-3 top-[2px] bg-white mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
               >Confirm Password
@@ -129,7 +204,27 @@ function Register() {
             type="submit"
             className="mb-2 cursor-pointer inline-block bg-[#34346fb9] w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
             data-te-ripple-init
-            data-te-ripple-color="light">
+            data-te-ripple-color="light"
+            onClick={async(e)=>{
+              e.preventDefault();
+              if(confirmPassword != password)return callModal("Passwords do not match")
+              const log:any = toast.loading('Validating inputs')
+              let data = {
+                firstname:firstName,
+                lastname:lastName,
+                email,
+                password
+              }
+              const loginaction =(result:any):void=>{
+                if(!result)return setIsLogin(false)
+                history('/')
+                sessionStorage.setItem('stellarAuth', result.token.toString())
+                setAuth(result.token.toString())
+                setIsLogin(true);   
+              }
+              callController(log, 'auth/register', 'post', data, ['firstname', 'lastname', 'email', 'password', 'confirmpassword'], loginaction, 'Login Successful', 'Registration failed')
+            }}
+            >
             Sign Up
           </button>
 
